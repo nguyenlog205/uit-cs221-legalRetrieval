@@ -1,12 +1,64 @@
-# React + Vite
+# Frontend - LegalTalk Chatbot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Đây là thư mục chứa toàn bộ mã nguồn cho phần giao diện người dùng (UI) của dự án LegalTalk, được xây dựng bằng React và Vite.
 
-Currently, two official plugins are available:
+## ✨ Tính năng chính
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* Giao diện đa trang (Trang chủ, Trang Chat) sử dụng `react-router-dom`.
+* Chế độ Sáng/Tối (Light/Dark Mode) được lưu lại cho người dùng.
+* Giao diện chat tương tác, tự động cuộn và kết nối với API backend.
+* Các hiệu ứng động tinh tế để tăng trải nghiệm người dùng.
 
-## Expanding the ESLint configuration
+## 🚀 Công nghệ sử dụng
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* **Framework:** [React](https://reactjs.org/) (với Vite)
+* **Routing:** [React Router DOM](https://reactrouter.com/)
+* **Gọi API:** [Axios](https://axios-http.com/)
+* **Hiệu ứng:** [React Particles](https://particles.js.org/) (cho `tsparticles-slim`)
+* **Styling:** CSS Modules
+
+## ⚙️ Cài đặt và Chạy
+
+### Yêu cầu
+* [Node.js](https://nodejs.org/) (phiên bản 18.x trở lên)
+* [npm](https://www.npmjs.com/)
+
+### Chạy ở môi trường phát triển (Development)
+
+1.  **Di chuyển vào thư mục frontend:**
+    ```bash
+    cd app/frontend
+    ```
+
+2.  **Cài đặt các thư viện cần thiết:**
+    Lệnh này sẽ đọc file `package.json` và tải về các thư viện.
+    ```bash
+    npm install
+    ```
+
+3.  **Khởi động server phát triển:**
+    ```bash
+    npm run dev
+    ```
+    Ứng dụng sẽ tự động mở và chạy tại địa chỉ `http://localhost:5173`.
+
+### Build cho môi trường Production
+
+Để tạo phiên bản tối ưu cho việc deploy, chạy lệnh sau:
+```bash
+npm run build
+```
+Lệnh này sẽ tạo ra một thư mục `dist` chứa tất cả các file tĩnh đã được tối ưu.
+
+### 🐳 Chạy bằng Docker
+Để chạy frontend một cách độc lập bằng Docker (sau khi đã build image):
+```bash
+# Build Docker image từ Dockerfile trong thư mục này
+docker build -t legaltalk-frontend .
+
+# Chạy container từ image vừa tạo
+docker run -p 5173:80 legaltalk-frontend
+```
+Truy cập ứng dụng tại `http://localhost:5173`.
+
+Lưu ý: Cách tốt nhất để chạy toàn bộ dự án là sử dụng file `docker-compose.yml` ở thư mục gốc.
