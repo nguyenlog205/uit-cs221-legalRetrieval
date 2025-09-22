@@ -1,0 +1,81 @@
+/* --- Import Font chữ --- */
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+
+.homepage-section {
+  display: flex; /* Bật Flexbox để căn giữa */
+  min-height: 100vh;
+  padding: 80px 20px; /* Padding trên dưới để không bị che bởi Navbar */
+  box-sizing: border-box;
+  background-color: var(--background-primary);
+}
+
+.homepage-content {
+  margin: auto; /* Tự động căn giữa theo cả chiều dọc và ngang */
+  max-width: 680px;
+  text-align: center; /* Căn giữa text bên trong */
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* --- Typography được thiết kế lại --- */
+.eyebrow-text {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.homepage-content h1 {
+  font-size: 3.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-top: 0;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.description {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* --- Nút bấm --- */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--primary-blue);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 32px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 14px 0 var(--shadow-color);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(0, 90, 158, 0.3);
+}
+
+.cta-button svg {
+  transition: transform 0.2s ease-in-out;
+}
+
+.cta-button:hover svg {
+  transform: translateX(3px);
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
