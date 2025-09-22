@@ -7,7 +7,6 @@ import HomePage from './pages/HomePage/HomePage';
 import AboutSection from './components/AboutSection/AboutSection';
 import ChatPage from './pages/ChatPage/ChatPage';
 import Footer from './components/Footer/Footer';
-import ParticleBackground from './components/ParticleBackground/ParticleBackground';
 
 // Import file CSS chính
 import './App.css';
@@ -45,7 +44,6 @@ function App() {
   return (
     <div className="app-container">
       {/* Lớp hiệu ứng nền, sẽ nằm sau tất cả nội dung khác */}
-      <ParticleBackground />
       
       {/* Navbar luôn hiển thị */}
       <Navbar theme={theme} toggleTheme={toggleTheme} />

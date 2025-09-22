@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './AboutSection.css';
-import StaticParticleBackground from '../ParticleBackground/StaticParticleBackground';
 
 // Custom hook để theo dõi xem element có trong màn hình không
 const useOnScreen = (options) => {
@@ -40,7 +39,6 @@ const AboutSection = () => {
       ref={ref} 
       className={`about-section-container ${isVisible ? 'is-visible' : ''}`}
     >
-      <StaticParticleBackground />
       <div className="about-section-content">
         <h2>Về LegalTalk</h2>
         <p>
