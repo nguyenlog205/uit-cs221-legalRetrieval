@@ -38,3 +38,10 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Style cho lớp nền hạt */
+
+.app-container {
+  position: relative;
+  z-index: 1;
+}

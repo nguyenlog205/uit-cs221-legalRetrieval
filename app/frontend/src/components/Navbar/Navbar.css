@@ -25,10 +25,32 @@
 }
 
 .navbar-logo {
-  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa icon và chữ */
+  font-size: 1.8rem;
   font-weight: 700;
-  font-size: 1.5rem;
+  color: var(--text-dark);
   text-decoration: none;
+}
+
+/* Style và Animation cho icon trái tim */
+.heart-beat-icon {
+  width: 28px;
+  height: 28px;
+  fill: #FF5A5F;
+  stroke: none;
+  animation: heartbeat 1.5s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  10% { transform: scale(1.2); }
+  20% { transform: scale(1); }
+  60% { transform: scale(1); }
+  70% { transform: scale(1.2); }
+  80% { transform: scale(1); }
+  100% { transform: scale(1); }
 }
 
 .nav-menu {
@@ -61,4 +83,8 @@
   border: none;
   cursor: pointer;
   color: var(--text-dark);
+  padding: 8px; /* Tăng vùng bấm cho dễ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

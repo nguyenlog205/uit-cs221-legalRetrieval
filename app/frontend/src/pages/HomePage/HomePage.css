@@ -1,26 +1,56 @@
 /* --- Import Font chữ --- */
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
 
-.homepage-section {
-  display: flex; /* Bật Flexbox để căn giữa */
-  min-height: 100vh;
-  padding: 80px 20px; /* Padding trên dưới để không bị che bởi Navbar */
-  box-sizing: border-box;
-  background-color: var(--background-primary);
+/* --- Biến màu (giữ lại để dễ quản lý) --- */
+:root {
+  --primary-blue: #005A9E;
+  --text-dark: #1A202C;
+  --text-light: #4A5568;
+  --background-light: #F7F8FC;
 }
 
+/* --- Container chính VỚI ẢNH NỀN --- */
+.homepage-section {
+  position: relative; /* Quan trọng để lớp phủ hoạt động */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 80px 20px;
+  box-sizing: border-box;
+  
+  /* Các thuộc tính cho ảnh nền */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* --- Lớp phủ tối lên ảnh nền --- */
+.homepage-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85); /* Lớp phủ màu đen với độ mờ 50% */
+  z-index: 1;
+}
+
+/* --- Nội dung chữ --- */
 .homepage-content {
-  margin: auto; /* Tự động căn giữa theo cả chiều dọc và ngang */
+  position: relative; /* Đưa nội dung lên trên lớp phủ */
+  z-index: 2;
   max-width: 680px;
-  text-align: center; /* Căn giữa text bên trong */
+  text-align: center;
   animation: fadeIn 0.8s ease-out;
 }
 
-/* --- Typography được thiết kế lại --- */
+/* --- Typography (chữ màu sáng để nổi bật trên nền tối) --- */
 .eyebrow-text {
   font-size: 0.875rem;
   font-weight: 700;
-  color: var(--primary-blue);
+  color: #a7c5eb; /* Màu xanh nhạt cho nổi bật */
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -29,18 +59,17 @@
 .homepage-content h1 {
   font-size: 3.75rem;
   font-weight: 700;
-  color: var(--text-dark);
-  margin-top: 0;
-  margin-bottom: 24px;
+  color: #FFFFFF;
+  margin: 0;
   line-height: 1.2;
 }
 
 .description {
   font-size: 1.125rem;
   font-weight: 400;
-  color: var(--text-light);
+  color: #EAEAEA;
   line-height: 1.7;
-  margin-bottom: 40px;
+  margin: 24px 0 40px 0;
 }
 
 /* --- Nút bấm --- */
@@ -48,17 +77,20 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  
   background-color: var(--primary-blue);
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
   padding: 16px 32px;
+  
   font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 1rem;
   font-weight: 500;
+  
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 4px 14px 0 var(--shadow-color);
+  box-shadow: 0 4px 14px 0 rgba(0, 90, 158, 0.2);
 }
 
 .cta-button:hover {

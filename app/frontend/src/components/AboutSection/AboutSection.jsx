@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './AboutSection.css';
+import StaticParticleBackground from '../ParticleBackground/StaticParticleBackground';
 
 // Custom hook để theo dõi xem element có trong màn hình không
 const useOnScreen = (options) => {
-  const ref = useRef();
+  const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -14,13 +15,14 @@ const useOnScreen = (options) => {
       }
     }, options);
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, [ref, options]);
@@ -28,20 +30,22 @@ const useOnScreen = (options) => {
   return [ref, isVisible];
 };
 
-
 const AboutSection = () => {
+  // Dùng custom hook để lấy ref và trạng thái isVisible
   const [ref, isVisible] = useOnScreen({ threshold: 0.2 });
 
   return (
+    // Gán ref vào đây và thêm class 'is-visible' khi nó xuất hiện
     <section 
       ref={ref} 
-      className={`about-section ${isVisible ? 'is-visible' : ''}`}
+      className={`about-section-container ${isVisible ? 'is-visible' : ''}`}
     >
-      <div className="about-container">
+      <StaticParticleBackground />
+      <div className="about-section-content">
         <h2>Về LegalTalk</h2>
-        <p className="about-subtitle">
-          Một trợ lý ảo thông minh, giúp bạn giải đáp các thắc mắc pháp lý
-          trong lĩnh vực y tế một cách nhanh chóng và tin cậy.
+        <p>
+          Một trợ lý AI thông minh, giúp bạn giải đáp các thắc mắc pháp lý trong lĩnh vực y
+          tế một cách nhanh chóng và tin cậy.
         </p>
         <div className="features-grid">
           <div className="feature-card">
@@ -50,7 +54,7 @@ const AboutSection = () => {
           </div>
           <div className="feature-card">
             <h3>Chính xác</h3>
-            <p>Dữ liệu được huấn luyện từ các nguồn văn bản pháp luật chính thống.</p>
+            <p>Dữ liệu được huấn luyện từ các văn bản pháp luật chính thống.</p>
           </div>
           <div className="feature-card">
             <h3>Dễ tiếp cận</h3>
