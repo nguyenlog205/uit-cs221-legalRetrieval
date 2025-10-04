@@ -127,17 +127,8 @@ if __name__ == '__main__':
     
     # 3. Chuẩn bị câu ví dụ
     sample_sentences = [
-        "Trường Đại học Công nghệ Thông tin là một trường đại học hàng đầu.",
-        "Phở là món ăn đặc trưng của ẩm thực Việt Nam.",
-        "Làm thế nào để học tốt môn trí tuệ nhân tạo?",
-        "Thủ đô của Việt Nam là Hà Nội."
+        "Tôi là An. Tôi yêu Việt Nam rất nhiều."
     ]
-
-    # 4. Vector hóa sử dụng chiến lược [CLS] pooling
-    print("\nVector hóa sử dụng [CLS] pooling...")
-    cls_embeddings_tf = vectorizer_tf.encode(sample_sentences, pooling_strategy="cls")
-    print("Kích thước mảng vector:", cls_embeddings_tf.shape)
-    print("Vector đầu tiên (5 chiều đầu):", cls_embeddings_tf[0][:5])
     
     # 5. Vector hóa sử dụng chiến lược Mean pooling
     print("\nVector hóa sử dụng Mean pooling...")
