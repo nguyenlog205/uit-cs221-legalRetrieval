@@ -1,4 +1,4 @@
-# [UIT-CS221] Vietnamese Law Retrieval System
+# [UIT-CS221] Vietnamese Law Retrieval Application
 > This repository serves as the version control platform for the final-semester project "Vietnamese Law Retrieval System" for subject **CS221 - Natural Language Processing** at University of Information Technology, Vietnam National University Ho Chi Minh city.
 
 ## Prerequisite
