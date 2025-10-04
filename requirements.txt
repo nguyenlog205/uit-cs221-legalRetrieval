@@ -1,0 +1,15 @@
+# Core data science and machine learning libraries
+pandas
+numpy
+tensorflow
+transformers
+sentence-transformers
+faiss-cpu
+
+# Web scraping
+selenium
+webdriver-manager
+
+# For FastAPI backend (optional, if you build out api.py)
+fastapi
+uvicorn
