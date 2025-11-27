@@ -20,6 +20,10 @@ uit-cs221-legalRetrieval/
 │   └── raw/              # Raw data collected from sources
 │
 ├── development/          # Scripts and notebooks for development and ETL pipeline
+│   ├── etl-pipeline/     # Data ingestion and integration
+│   │   ├── data-ingestion/
+│   │   └── data-integration/
+│   ├── rag-pipeline/     # RAG-architecture
 │
 ├── evaluation/           # Notebooks for model evaluation
 │   └── report.ipynb      # Evaluation results and analysis
