@@ -30,7 +30,7 @@ def extract_config(
 from dotenv import load_dotenv
 import os
 
-def load_dotenv(
+def load_env(
     variable_name: str
 ):
     """
