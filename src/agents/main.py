@@ -1,8 +1,8 @@
 import asyncio
 import sys
 
-from intention_classifier import IntentionClassifier
-from src.agents.database_manager import DatabaseManager
+from src.agents.intent_classifier import IntentClassifier
+from src.agents.database_retriever import DatabaseRetriever
 from src.agents.general_generator import GeneralGenerator
 from src.agents.specialized_generator import SpecificGenerator
 from src.utils import load_configs
@@ -18,12 +18,12 @@ class MultiAgentRAG:
         print("            MULTI-AGENT RAG SYSTEM INITIALIZATION             ")
         print("==============================================================")
         print(">> [1/4] Waking up Intention Classifier...")
-        self.intention_classifier = IntentionClassifier(
+        self.intention_classifier = IntentClassifier(
             model_id=self.config.get("classifier_model", "gemini-2.0-flash-exp")
         )
         
         print(">> [2/4] Connecting to Database Manager...")
-        self.database_manager = DatabaseManager(
+        self.database_manager = DatabaseRetriever(
             config=self.config.get("database", {})
         )
         
