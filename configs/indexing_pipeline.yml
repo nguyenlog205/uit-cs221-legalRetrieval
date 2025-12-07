@@ -6,7 +6,7 @@ splitting:
 
 embedding:
   model_name: "bkai-foundation-models/vietnamese-bi-encoder"
-  device: "cpu"
+  device: "cuda"
 
 data:
   persist_directory: "./data/legal_documents/chroma_db"
