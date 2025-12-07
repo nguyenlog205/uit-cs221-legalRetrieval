@@ -5,14 +5,9 @@ splitting:
   separators: ["\n\n", "\n", " ", ""]
 
 embedding:
-  provider: "huggingface"
   model_name: "bkai-foundation-models/vietnamese-bi-encoder"
   device: "cpu"
-  batch_size: 32
 
 data:
-  input_path: "./data/documents/metadata_law_giao_thông_đường_bộ.json" 
-  file_type: "json" 
-  type: "chroma"
   persist_directory: "./data/legal_documents/chroma_db"
   collection_name: "vn_law"
