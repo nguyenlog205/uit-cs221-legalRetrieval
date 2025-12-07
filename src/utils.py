@@ -25,4 +25,22 @@ def extract_config(
     except Exception as e:
         print(f"An unexpected error occurred while reading {file_path}: {e}")
         return {}
-    
+
+
+from dotenv import load_dotenv
+import os
+
+def load_dotenv(
+    variable_name: str
+):
+    """
+    Load environment variables from a .env file.
+    """
+    load_dotenv()
+    variable_value = os.getenv(variable_name)
+    if variable_value:
+        print(f"Variable {variable_name} has been loaded successfully!")
+        return variable_value
+    else:
+        print(f"Warning: Variable {variable_name} not found in .env file.")
+        return None
