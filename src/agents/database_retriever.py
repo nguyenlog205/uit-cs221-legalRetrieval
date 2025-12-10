@@ -8,6 +8,7 @@ from langchain_core.embeddings import Embeddings
 
 # IMPORT CÁC THƯ VIỆN CẦN THIẾT
 from langchain_community.retrievers import BM25Retriever
+import asyncio
 # ĐÃ BỎ IMPORT EnsembleRetriever
 
 class DatabaseRetriever:
@@ -159,7 +160,7 @@ class DatabaseRetriever:
 
 
 # --- CHẠY THỬ (TEST) ---
-if __name__ == "__main__":
+async def async_main():
     
     print("\n--- TEST: Khởi tạo ---")
     start_time = time.perf_counter()
@@ -169,13 +170,22 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"LỖI KHỞI TẠO: {e}.")
         print("Lưu ý: Không thể chạy block __main__ mà không có file config và DB.")
-        exit()
+        return # Dùng return thay cho exit() để clean hơn
         
     end_time = time.perf_counter()
     print(f'-> Thời gian khởi tạo: {end_time - start_time:.4f} giây')
     
     query_1 = r"Quy định về trách nhiệm của bệnh viện trong việc tiếp nhận người bệnh?"
-    retriever.retrieve(query_1, k=5)
+    # SỬA: Thêm await để thực thi hàm async retrieve
+    await retriever.retrieve(query_1, k=5)
 
     query_2 = r"Trường hợp nào được hưởng 100% chi phí khi đi khám bảo hiểm?"
-    retriever.retrieve(query_2, k=5)
+    # SỬA: Thêm await để thực thi hàm async retrieve
+    await retriever.retrieve(query_2, k=5)
+
+async def main():
+    await async_main()
+
+
+asyncio.run(async_main())
+# src.agents.database_retriever
