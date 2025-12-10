@@ -1,22 +1,21 @@
 import os
-from google import genai
-from google.genai import types
-
-from src.utils import load_env
+import asyncio
+from groq import AsyncGroq
+from groq.types.chat import ChatCompletionMessageParam
+from src.utils import load_env 
 
 
 class IntentClassifier:
     def __init__(
         self,
-        model_id: str = "gemini-2.5-flash-lite", 
-        api_name: str = None
+        api_key,
+        model_id: str = "llama-3.1-8b-instant",
     ):
-        print(f'>> Establishing Intention Classifier ...')
+        if not api_key:
+            raise ValueError(f"API Key for {model_id} not found.")
+            
+        self.client = AsyncGroq(api_key=api_key)
         self.model_id = model_id
-        self.client = genai.Client(
-            api_key = load_env(api_name)
-        )
-
         print(f'>> Intention Classifier has been established successfully.')
         print('--- Model Details ---')
         print(f'Model ID: {self.model_id}')
@@ -50,24 +49,59 @@ Current Task:
 Input: "{user_input}"
 Class:"""
 
+        messages: list[ChatCompletionMessageParam] = [
+            {"role": "system", "content": "You are an expert Intent Classifier. Your output must be ONLY 'general' or 'specific'."},
+            {"role": "user", "content": prompt}
+        ]
+
         try:
-            response = await self.client.models.generate_content_async(
+            response = await self.client.chat.completions.create(
                 model=self.model_id,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.0,
-                    max_output_tokens=10
-                )
+                messages=messages,
+                temperature=0.0,
+                max_tokens=10
             )
-            result_text = response.text.strip().lower()
+            
+            result_text = response.choices[0].message.content.strip().lower()
+            
             if "general" in result_text:
                 return "general"
             elif "specific" in result_text:
                 return "specific"
             else:
-                # print(f">> Warning: Unclear intent '{result_text}'. Defaulting to specific.")
                 return "specific"
 
         except Exception as e:
-            # print(f">> Error in classification: {e}")
             return "specific"
+
+
+def main():
+    
+    async def run_classifier_test():
+        api_key = load_env("GROQ_API_KEY")
+        if not api_key:
+            print("Vui lòng đặt biến môi trường GROQ_API_KEY để chạy thử.")
+            return
+
+        try:
+            classifier = IntentClassifier(api_key=api_key)
+
+            test_queries = [
+                "Bạn có phải là bot không?", 
+                "Tôi muốn biết về quy trình cấp chứng chỉ hành nghề y.", 
+                "Cảm ơn bạn nhiều.", 
+                "Ai là bộ trưởng bộ y tế?",
+            ]
+
+            print("\n--- Running Classification Tests ---")
+            for query in test_queries:
+                intent = await classifier.classify(query)
+                print(f"Input: '{query}' -> Intent: {intent}")
+
+        except Exception as e:
+            print(f"Failed to run test: {e}")
+
+    asyncio.run(run_classifier_test())
+
+# main()
+# src.agents.intent_classifier
