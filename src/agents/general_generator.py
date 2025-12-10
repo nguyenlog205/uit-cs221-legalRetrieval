@@ -65,7 +65,7 @@ class GeneralGenerator:
         return response.choices[0].message.content.strip()
 
 
-if __name__ == "__main__":
+def main():
     api_key = load_env("GROQ_API_KEY")
     if not api_key:
         print("Vui lòng đặt GROQ_API_KEY để chạy thử.")
