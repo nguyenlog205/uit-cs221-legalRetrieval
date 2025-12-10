@@ -103,7 +103,7 @@ class DatabaseRetriever:
             vector_k=mmr_cfg.get('vector_k', 10),
         )
 
-    def retrieve(self, query: str, k: int = 5, filters: Optional[Dict[str, Any]] = None) -> List[Document]:
+    async def retrieve(self, query: str, k: int = 5, filters: Optional[Dict[str, Any]] = None) -> List[Document]:
         """
         Hàm đi săn tìm tài liệu, sử dụng BM25 và Vector Search, sau đó hợp nhất thủ công.
         """
