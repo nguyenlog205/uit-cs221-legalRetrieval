@@ -1,5 +1,6 @@
 import os
 from typing import List, Dict, Any
+
 # SỬA: Thay thế google.genai bằng groq và AsyncGroq
 from groq import AsyncGroq 
 from groq.types.chat import ChatCompletionMessageParam # Để định nghĩa Messages
@@ -11,10 +12,12 @@ class SpecificGenerator:
     """
     Tạo phản hồi chi tiết (specific) bằng cách tổng hợp thông tin 
     từ câu hỏi của người dùng và các đoạn văn bản luật pháp được trích xuất (Sử dụng Groq).
+
     """
     def __init__(
         self, 
         api_key: str, 
+
         # SỬA: Sử dụng mô hình Groq. Mixtral 8x22b hoặc Llama 3.1 70B thường tốt cho RAG.
         model_id: str = "llama-3.1-8b-instant",
         max_output_tokens: int = 512
@@ -26,11 +29,20 @@ class SpecificGenerator:
         self.temperature = 0.1 # Nhiệt độ thấp cho RAG để tăng tính xác thực
         print(f"-> SpecificGenerator (Groq) ready. Model: {self.model_id}. Max output: {self.max_output_tokens} tokens.")
 
+
     async def generate_response(self, query: str, documents: List[Document]) -> str:
         """
         Tổng hợp câu trả lời dựa trên câu hỏi và các đoạn tài liệu luật pháp.
+
+
+        Args:
+            query: Câu hỏi ban đầu của người dùng.
+            documents: Danh sách các đối tượng Document được trả về từ DatabaseRetriever.
+
+        Returns:
+            str: Câu trả lời tổng hợp và chính xác.
         """
-        # --- Định dạng nguồn tài liệu ---
+        
         context_texts = [
             f"--- Tài liệu: {doc.metadata.get('source', 'Văn bản Luật')}\n"
             f"Nội dung: {doc.page_content}\n"
@@ -38,6 +50,7 @@ class SpecificGenerator:
         ]
         context = "\n\n".join(context_texts)
         
+
         # --- Xây dựng System Prompt và User Prompt (RAG Prompting) ---
         
         # Sử dụng System Prompt để định vị vai trò của AI
