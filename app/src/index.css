@@ -1,0 +1,19 @@
+/* Xóa hết nội dung cũ và thay bằng đoạn code này */
+
+:root {
+  /* Giữ lại các biến font chữ mặc định là tốt */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  /* Xóa bỏ các thuộc tính display:flex và place-items:center */
+  margin: 0;
+  /* Chúng ta sẽ để các component tự quyết định layout của chúng */
+}

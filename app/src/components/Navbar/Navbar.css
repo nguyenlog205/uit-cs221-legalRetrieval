@@ -1,0 +1,90 @@
+.navbar {
+  background: var(--navbar-bg);
+  backdrop-filter: blur(10px);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+  transition: background 0.3s ease;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  width: 100%;
+  max-width: 1300px;
+  padding: 0 50px;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Khoảng cách giữa icon và chữ */
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+/* Style và Animation cho icon trái tim */
+.heart-beat-icon {
+  width: 28px;
+  height: 28px;
+  fill: #FF5A5F;
+  stroke: none;
+  animation: heartbeat 1.5s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  10% { transform: scale(1.2); }
+  20% { transform: scale(1); }
+  60% { transform: scale(1); }
+  70% { transform: scale(1.2); }
+  80% { transform: scale(1); }
+  100% { transform: scale(1); }
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+}
+
+.nav-item {
+  height: 80px;
+}
+
+.nav-link {
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 1rem;
+  height: 100%;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+  color: var(--primary-blue);
+}
+
+.theme-toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  padding: 8px; /* Tăng vùng bấm cho dễ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

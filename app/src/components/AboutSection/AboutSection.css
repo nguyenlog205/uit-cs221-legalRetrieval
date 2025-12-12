@@ -1,0 +1,80 @@
+.about-section-container {
+  position: relative;
+  padding: 100px 20px;
+  background-color: var(--background-secondary);
+  color: var(--text-dark);
+  overflow: hidden;
+
+  /* CSS cho hiệu ứng xuất hiện */
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Khi có class is-visible, section sẽ hiện ra */
+.about-section-container.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Đảm bảo nội dung nằm trên lớp nền hạt */
+.about-section-content {
+  position: relative;
+  z-index: 2; /* Cao hơn lớp nền hạt */
+
+  /* ĐÂY LÀ PHẦN SỬA LỖI "BÈ RA" */
+  max-width: 1100px; /* Giới hạn chiều rộng tối đa của nội dung */
+  margin: 0 auto;  /* Tự động căn giữa theo chiều ngang */
+  text-align: center;
+}
+
+
+.about-section-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+}
+
+.about-section-content .about-subtitle { /* Thêm class để dễ style */
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: var(--text-light);
+  max-width: 700px;
+  margin: 0 auto 60px auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  text-align: left; /* Căn lề trái cho nội dung trong thẻ */
+}
+
+.feature-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 15px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px var(--shadow-color-hover);
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin-bottom: 0;
+}

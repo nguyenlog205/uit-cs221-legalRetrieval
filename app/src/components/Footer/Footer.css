@@ -1,0 +1,50 @@
+.footer-container {
+  padding: 50px 50px 0 50px;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--background-secondary);
+  color: var(--text-light);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 250px; /* Chiều rộng tối thiểu cho mỗi cột */
+}
+
+.footer-column h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+.footer-column p, .footer-column li {
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column li {
+  margin-bottom: 8px;
+}
+
+.footer-copyright {
+  text-align: center;
+  padding: 25px 0;
+  margin-top: 40px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}

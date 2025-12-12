@@ -1,0 +1,47 @@
+:root {
+  --primary-blue: #005A9E;
+  --text-dark: #1A202C;
+  --text-light: #4A5568;
+}
+
+/* --- THEME SÁNG (MẶC ĐỊNH) --- */
+html[data-theme='light'] {
+  --background-primary: #F7F8FC;
+  --background-secondary: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --navbar-bg: rgba(247, 248, 252, 0.8);
+  --border-color: #E2E8F0;
+  --shadow-color: rgba(0, 90, 158, 0.1);
+  color-scheme: light;
+}
+
+/* --- THEME TỐI --- */
+html[data-theme='dark'] {
+  --primary-blue: #38BDF8;
+  --text-dark: #E2E8F0;
+  --text-light: #94A3B8;
+  --background-primary: #0F172A;
+  --background-secondary: #1E293B;
+  --card-bg: #1E293B;
+  --navbar-bg: rgba(15, 23, 42, 0.8);
+  --border-color: #334155;
+  --shadow-color: rgba(56, 189, 248, 0.1);
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--background-primary);
+  color: var(--text-dark);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Style cho lớp nền hạt */
+
+.app-container {
+  position: relative;
+  z-index: 1;
+}

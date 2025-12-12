@@ -1,0 +1,18 @@
+splitting:
+  method: "recursive"
+  chunk_size: 512
+  chunk_overlap: 64
+  separators: ["\n\n", "\n", " ", ""]
+
+embedding:
+  model_name: "bkai-foundation-models/vietnamese-bi-encoder"
+  device: "cuda"
+
+data:
+  persist_directory: "./data/legal_documents/chroma_db"
+  collection_name: "vn_law"
+
+reranking:
+  model_name: "maidalun1020/bce-reranker-base_v1"
+  device: "cpu"
+  max_length: 512

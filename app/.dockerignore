@@ -1,0 +1,11 @@
+# Bỏ qua thư mục chứa các thư viện đã cài, Docker sẽ tự cài đặt
+node_modules
+
+# Bỏ qua thư mục build (dist), Docker sẽ tự tạo ra
+dist
+
+# Bỏ qua các file log của npm
+npm-debug.log*
+
+# Bỏ qua các file cấu hình của môi trường local
+.env.local
