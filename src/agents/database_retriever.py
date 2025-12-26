@@ -187,5 +187,5 @@ async def main():
     await async_main()
 
 
-asyncio.run(async_main())
+# asyncio.run(async_main())
 # src.agents.database_retriever

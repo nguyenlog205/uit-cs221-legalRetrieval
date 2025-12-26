@@ -9,7 +9,7 @@ embedding:
   device: "cuda"
 
 data:
-  persist_directory: "./data/legal_documents/chroma_db"
+  persist_directory: "../../data/legal_documents/chroma_db"
   collection_name: "vn_law"
 
 reranking:

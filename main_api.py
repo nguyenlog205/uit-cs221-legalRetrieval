@@ -7,7 +7,8 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 # --- Import các Module Agents ---
-from src.agents.intent_classifier import IntentClassifier
+# Giả sử IntentClassifier và GeneralGenerator vẫn dùng Groq (hoặc bạn có thể sửa sau)
+from src.agents.intent_classifier import IntentClassifier 
 from src.agents.database_retriever import DatabaseRetriever
 from src.agents.specialized_generator import SpecificGenerator
 from src.agents.general_generator import GeneralGenerator
@@ -28,18 +29,24 @@ class ChatResponse(BaseModel):
     source_documents: Optional[List[str]] = None
 
 # --- Global State ---
-# Biến toàn cục để lưu trữ các instances của agents
 agents = {}
 
-# --- Lifespan Manager (Khởi tạo 1 lần khi chạy Server) ---
+# --- Cấu hình URL ---
+# URL của Local Model Server (Gemma/Llama mà bạn đang chạy ở cửa sổ kia)
+LOCAL_LLM_URL = "http://localhost:8000/chat" 
+
+# --- Lifespan Manager ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("--- KHỞI ĐỘNG HỆ THỐNG RAG ---")
     
-    # 1. Load API Key
-    api_key = load_env("GROQ_API_KEY")
+    # 1. Load API Key (Vẫn cần cho Intent Classifier hoặc General Gen nếu chúng dùng Groq)
+    api_key = load_env("GROQ_API_KEY") 
+    
+    # Nếu IntentClassifier cũng chuyển sang Local thì không cần check kỹ cái này, 
+    # nhưng tạm thời giữ nguyên logic cũ cho an toàn.
     if not api_key:
-        raise ValueError("CRITICAL: Không tìm thấy GROQ_API_KEY trong biến môi trường.")
+        logger.warning("⚠️ Warning: Không thấy GROQ_API_KEY. Các module dùng Groq sẽ lỗi.")
 
     try:
         # 2. Khởi tạo Intent Classifier
@@ -50,16 +57,18 @@ async def lifespan(app: FastAPI):
         logger.info("Initializing General Generator...")
         agents["general_gen"] = GeneralGenerator(api_key=api_key)
 
-        # 4. Khởi tạo Specialized Generator (RAG Writer)
-        logger.info("Initializing Specialized Generator...")
-        agents["specific_gen"] = SpecificGenerator(api_key=api_key)
+        # 4. Khởi tạo Specialized Generator (UPDATE: Dùng Local API)
+        logger.info(f"Initializing Specialized Generator pointing to {LOCAL_LLM_URL}...")
+        agents["specific_gen"] = SpecificGenerator(
+            api_key="unused",       # Giữ tham số này để không lỗi code cũ (nếu class yêu cầu)
+            api_url=LOCAL_LLM_URL,  # Trỏ vào server Gemma
+            max_output_tokens=512
+        )
 
-        # 5. Khởi tạo Database Retriever (Nặng nhất - Load Vector DB & Models)
-        # Đường dẫn config trỏ tới file .yml của bạn
+        # 5. Khởi tạo Database Retriever
         config_path = "configs/indexing_pipeline.yml" 
         if os.path.exists(config_path):
             logger.info(f"Initializing Database Retriever from {config_path}...")
-            # DatabaseRetriever có hàm factory method from_config
             agents["retriever"] = DatabaseRetriever.from_config(config_path=config_path)
         else:
             logger.warning(f"Warning: Không tìm thấy {config_path}. Chế độ Specific có thể bị lỗi.")
@@ -71,9 +80,8 @@ async def lifespan(app: FastAPI):
         logger.error(f"Lỗi khởi tạo hệ thống: {e}")
         raise e
 
-    yield # Server bắt đầu nhận request tại đây
+    yield # Server bắt đầu nhận request
 
-    # Shutdown logic (nếu cần dọn dẹp tài nguyên)
     logger.info("Shutting down system...")
     agents.clear()
 
@@ -85,70 +93,71 @@ app = FastAPI(title="Vietnam Public Health RAG API", lifespan=lifespan)
 @app.get("/health")
 async def health_check():
     """Kiểm tra trạng thái server"""
-    return {"status": "ok", "components": list(agents.keys())}
+    return {
+        "status": "ok", 
+        "components": list(agents.keys()),
+        "local_llm_target": LOCAL_LLM_URL
+    }
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequest):
-    """
-    Endpoint chính xử lý luồng hội thoại:
-    Input -> Classifier -> (General Gen) OR (Retriever -> Specific Gen)
-    """
     query = request.query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Câu hỏi không được để trống.")
 
-    # 1. BƯỚC 1: Phân loại ý định (General vs Specific)
-    intent = await agents["classifier"].classify(query)
-    logger.info(f"Input: '{query}' | Intent detected: {intent}")
+    # 1. Phân loại ý định
+    try:
+        intent = await agents["classifier"].classify(query)
+    except Exception as e:
+        logger.error(f"Classifier Error: {e}")
+        intent = "specific" # Fallback về specific nếu classifier lỗi
+    
+    logger.info(f"Input: '{query}' | Intent: {intent}")
 
-    # 2. XỬ LÝ NHÁNH 1: CÂU HỎI XÃ GIAO (GENERAL)
+    # 2. NHÁNH 1: GENERAL (Xã giao)
     if intent == "general":
-        # GeneralGenerator dùng hàm sync, chạy trực tiếp
-        response_text = agents["general_gen"].generate_general(query)
-        return ChatResponse(
-            response=response_text,
-            intent="general",
-            source_documents=[]
-        )
+        try:
+            response_text = agents["general_gen"].generate_general(query)
+            return ChatResponse(response=response_text, intent="general", source_documents=[])
+        except Exception:
+            intent = "specific" # Nếu lỗi thì thử đẩy sang RAG luôn
 
-    # 3. XỬ LÝ NHÁNH 2: CÂU HỎI CHUYÊN MÔN (SPECIFIC/RAG)
+    # 3. NHÁNH 2: SPECIFIC (RAG với Local LLM)
     if intent == "specific":
         retriever = agents.get("retriever")
         
         if not retriever:
             return ChatResponse(
-                response="Hệ thống cơ sở dữ liệu đang bảo trì. Vui lòng thử lại sau.",
+                response="Hệ thống cơ sở dữ liệu chưa sẵn sàng.", 
                 intent="error"
             )
 
-        # 3a. Truy vấn tài liệu (Retrieve)
-        # Retrieve là hàm async trong file database_retriever.py của bạn
+        # 3a. Retrieve
         retrieved_docs = await retriever.retrieve(query, k=5)
         
-        # Logic: Nếu không tìm thấy tài liệu nào liên quan -> Fallback
+        # 3b. Fallback nếu không có tài liệu
         if not retrieved_docs:
-            logger.info("Không tìm thấy tài liệu phù hợp -> Chuyển sang Fallback.")
+            logger.info("No docs found -> Fallback.")
             fallback_text = agents["general_gen"].generate_fallback(query)
             return ChatResponse(
-                response=fallback_text,
-                intent="specific_fallback",
+                response=fallback_text, 
+                intent="specific_fallback", 
                 source_documents=[]
             )
 
-        # 3b. Tổng hợp câu trả lời (Generate)
-        # Generate là hàm async trong file specialized_generator.py
+        # 3c. Generate (Gọi sang Local Server 8000)
         answer = await agents["specific_gen"].generate_response(query, retrieved_docs)
         
-        # Trích xuất nguồn để hiển thị cho User
         sources = [doc.metadata.get("source", "Unknown") for doc in retrieved_docs]
         
         return ChatResponse(
             response=answer,
             intent="specific",
-            source_documents=list(set(sources)) # Loại bỏ trùng lặp tên nguồn
+            source_documents=list(set(sources))
         )
 
 # --- Entry Point ---
 if __name__ == "__main__":
-    # Chạy server tại localhost:8000
-    uvicorn.run("main_api:app", host="0.0.0.0", port=8000, reload=True)
+    # QUAN TRỌNG: Đổi port thành 8001 để tránh xung đột với Model Server (8000)
+    print("🚀 Starting RAG API Server on port 8001...")
+    uvicorn.run("main_api:app", host="0.0.0.0", port=8001, reload=True)
