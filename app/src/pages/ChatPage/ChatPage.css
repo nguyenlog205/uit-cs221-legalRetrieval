@@ -34,7 +34,24 @@
   position: relative;
 }
 
-/* --- HOẠ TIẾT TRỐNG ĐỒNG ĐÔNG SƠN --- */
+/* --- HOẠ TIẾT TRỐNG ĐỒNG ĐÔNG SƠN (Giữ chỗ nếu cần) --- */
+.vietnam-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Nằm dưới tin nhắn */
+  pointer-events: none; /* Cho phép click xuyên qua lớp nền này */
+  opacity: 0.03; /* Độ mờ cực thấp để không làm rối mắt */
+
+  /* Tạo họa tiết chấm bi chéo (Polka Dot) bằng CSS thuần */
+  background-image: 
+    radial-gradient(var(--primary-blue) 1.5px, transparent 1.5px),
+    radial-gradient(var(--primary-blue) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
 
 /* --- KHU VỰC TIN NHẮN --- */
 .chat-messages {
@@ -151,3 +168,52 @@
 .typing-indicator span:nth-of-type(2) { animation-delay: -1.1s; }
 .typing-indicator span:nth-of-type(3) { animation-delay: -0.9s; }
 @keyframes wave { 0%, 60%, 100% { transform: initial; } 30% { transform: translateY(-8px); } }
+
+
+/* ================================================= */
+/* --- PHẦN MỚI THÊM: STYLE CHO REACT MARKDOWN --- */
+/* ================================================= */
+
+.markdown-content {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Xử lý khoảng cách giữa các đoạn văn */
+.markdown-content p {
+  margin: 0 0 10px 0;
+}
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Xử lý danh sách (ul, ol) để có thụt lề đẹp */
+.markdown-content ul, .markdown-content ol {
+  margin: 8px 0 12px 20px;
+  padding-left: 0;
+}
+
+.markdown-content li {
+  margin-bottom: 6px;
+}
+
+/* Xử lý in đậm */
+.markdown-content strong {
+  font-weight: 700;
+  color: inherit; /* Giữ màu chữ của bong bóng cha */
+}
+
+/* Xử lý link (nếu có) */
+.markdown-content a {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+/* Đảm bảo màu chữ hiển thị đúng trong từng loại bubble */
+.message-bubble.bot .markdown-content {
+  color: var(--text-dark);
+}
+
+.message-bubble.user .markdown-content {
+  color: #fff;
+}

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown'; // <--- Import thư viện Markdown
 import './ChatPage.css';
 
 const SendIcon = () => (
@@ -15,7 +16,7 @@ const ChatPage = () => {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // --- 1. LẤY API URL TỪ BIẾN MÔI TRƯỜNG (.env) ---
+  // --- 1. LẤY API URL TỪ BIẾN MÔI TRƯỜNG ---
   const API_URL = import.meta.env.VITE_API_URL;
 
   // Auto scroll to bottom
@@ -34,28 +35,23 @@ const ChatPage = () => {
   const handleSend = async () => {
     if (input.trim() === '' || isLoading) return;
 
-    // 1. Hiển thị tin nhắn của User lên màn hình ngay
+    // Hiển thị tin nhắn User
     const userMessage = { sender: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
     
-    // Lưu lại input text để gửi đi, rồi clear ô nhập
     const queryText = input;
     setInput('');
     setIsLoading(true);
 
     try {
-      // --- 2. GỌI API BACKEND THẬT ---
-      // Nếu chưa cấu hình .env, nó sẽ dùng mặc định localhost:8000
+      // Gọi API Backend
       const targetUrl = API_URL || "http://localhost:8000"; 
       
-      console.log(`Sending to: ${targetUrl}/chat`);
-
       const response = await fetch(`${targetUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Format body phải khớp với class ChatRequest(BaseModel) bên Python
         body: JSON.stringify({ 
             query: queryText,
             session_id: "user-default" 
@@ -68,8 +64,7 @@ const ChatPage = () => {
 
       const data = await response.json();
 
-      // --- 3. HIỂN THỊ CÂU TRẢ LỜI TỪ SERVER ---
-      // Backend Python trả về field: { "response": "..." }
+      // Hiển thị câu trả lời từ Bot
       const botResponse = { sender: 'bot', text: data.response };
       setMessages(prev => [...prev, botResponse]);
 
@@ -99,9 +94,14 @@ const ChatPage = () => {
         <div className="chat-messages">
           {messages.map((msg, index) => (
             <div key={index} className={`message-bubble ${msg.sender}`}>
-              {msg.text}
+              {/* --- Thay đổi quan trọng ở đây --- */}
+              {/* Sử dụng ReactMarkdown để render text thay vì hiển thị trực tiếp */}
+              <div className="markdown-content">
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
+              </div>
             </div>
           ))}
+          
           {isLoading && (
             <div className="message-bubble bot typing-indicator">
               <span></span><span></span><span></span>
@@ -109,6 +109,7 @@ const ChatPage = () => {
           )}
           <div ref={messagesEndRef} />
         </div>
+        
         <div className="chat-input-area">
           <textarea
             ref={textareaRef}

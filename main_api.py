@@ -12,6 +12,7 @@ from src.agents.database_retriever import DatabaseRetriever
 from src.agents.specialized_generator import SpecificGenerator
 from src.agents.general_generator import GeneralGenerator
 from src.utils import load_env
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- Cấu hình Logging ---
 logging.basicConfig(level=logging.INFO)
@@ -92,6 +93,14 @@ async def lifespan(app: FastAPI):
 
 # --- Khởi tạo App FastAPI ---
 app = FastAPI(title="Vietnam Public Health RAG API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Cho phép mọi nguồn kết nối (hoặc điền ["http://localhost:5173"])
+    allow_credentials=True,
+    allow_methods=["*"],  # Cho phép mọi method (POST, GET, OPTIONS...)
+    allow_headers=["*"],  # Cho phép mọi header
+)
 
 # --- API Endpoints ---
 @app.get("/health")

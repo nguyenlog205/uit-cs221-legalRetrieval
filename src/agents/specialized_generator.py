@@ -24,38 +24,45 @@ class SpecificGenerator:
         print(f"-> SpecificGenerator (Groq API) ready. Target: {self.api_url} | Model: {self.model_id}")
 
     async def generate_response(self, query: str, documents: List[Document]) -> str:
-        """
-        Tổng hợp câu trả lời từ Groq API.
-        Signature hàm giữ nguyên: (query, documents) -> str
-        """
-        
-        # 1. Chuẩn bị Context (Giữ nguyên logic cũ)
-        context_texts = [
-            f"--- Tài liệu: {doc.metadata.get('source', 'Văn bản Luật')}\n"
-            f"Nội dung: {doc.page_content}\n"
-            for doc in documents
-        ]
+        # 1. Chuẩn bị Context
+        context_texts = []
+        for doc in documents:
+            source = doc.metadata.get("source", "Văn bản Luật")
+            content = doc.page_content.replace("\n", " ") # Dọn sạch xuống dòng thừa
+            context_texts.append(f"- Nguồn: {source}\n  Nội dung: {content}")
+            
         context_block = "\n\n".join(context_texts)
 
-        # 2. Tạo Prompt (Giữ nguyên logic gộp context)
-        final_user_content = f"""Dựa vào các thông tin dưới đây để trả lời câu hỏi.
+        # 2. Tạo Prompt "Chuyên Gia"
+        # Ép AI trả lời chi tiết, có trích dẫn và giọng văn chuyên nghiệp
+        final_user_content = f"""
+Bạn là một Trợ lý Luật sư AI chuyên về Y tế và Sức khỏe cộng đồng tại Việt Nam.
+Nhiệm vụ của bạn là giải đáp thắc mắc dựa trên các trích dẫn luật được cung cấp.
 
---- CONTEXT (Nguồn tài liệu) ---
+--- DỮ LIỆU LUẬT ĐƯỢC CUNG CẤP ---
 {context_block}
 
---- CÂU HỎI NGƯỜI DÙNG ---
+--- YÊU CẦU CÂU TRẢ LỜI ---
+1. Trả lời CHÍNH XÁC dựa vào dữ liệu trên. Tuyệt đối không bịa đặt thông tin không có trong văn bản.
+2. Giọng văn: Chuyên nghiệp, khách quan, dễ hiểu nhưng chặt chẽ về pháp lý.
+3. Trích dẫn: Khi đưa ra thông tin, hãy nhắc đến tên văn bản nguồn (ví dụ: "Theo Luật Khám chữa bệnh...").
+4. Định dạng: Sử dụng Markdown (xuống dòng, gạch đầu dòng) để trình bày rõ ràng.
+5. Nếu dữ liệu không đủ để trả lời, hãy nói: "Xin lỗi, trong cơ sở dữ liệu hiện tại không có thông tin cụ thể về vấn đề này."
+
+--- CÂU HỎI CỦA NGƯỜI DÙNG ---
 {query}
 """
 
-        # 3. Tạo Payload (Thay đổi format JSON để khớp chuẩn OpenAI/Groq)
-        # Logic không đổi: vẫn gửi final_user_content đi
+        # 3. Payload (Giữ nguyên, chỉ cần prompt xịn là đủ)
         payload = {
             "model": self.model_id,
             "messages": [
+                # Thêm System Role để định hình nhân cách ngay từ đầu
+                {"role": "system", "content": "Bạn là chuyên gia tư vấn pháp luật y tế Việt Nam tin cậy và chính xác."},
                 {"role": "user", "content": final_user_content}
             ],
             "max_tokens": self.max_output_tokens,
-            "temperature": 0.1 # Thêm tham số này để câu trả lời ổn định hơn (optional)
+            "temperature": 0.3 # Giữ thấp để AI ít "chém gió", bám sát luật hơn
         }
 
         # Header bắt buộc cho Groq
