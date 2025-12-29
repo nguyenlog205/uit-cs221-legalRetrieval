@@ -11,8 +11,12 @@ const ChatPage = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+
+  // --- 1. LẤY API URL TỪ BIẾN MÔI TRƯỜNG (.env) ---
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -27,19 +31,58 @@ const ChatPage = () => {
     }
   }, [input]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim() === '' || isLoading) return;
+
+    // 1. Hiển thị tin nhắn của User lên màn hình ngay
     const userMessage = { sender: 'user', text: input };
     setMessages(prev => [...prev, userMessage]);
+    
+    // Lưu lại input text để gửi đi, rồi clear ô nhập
+    const queryText = input;
     setInput('');
     setIsLoading(true);
 
-    // TODO: Replace with real API call
-    setTimeout(() => {
-      const botResponse = { sender: 'bot', text: `Bot đang xử lý...` };
+    try {
+      // --- 2. GỌI API BACKEND THẬT ---
+      // Nếu chưa cấu hình .env, nó sẽ dùng mặc định localhost:8000
+      const targetUrl = API_URL || "http://localhost:8000"; 
+      
+      console.log(`Sending to: ${targetUrl}/chat`);
+
+      const response = await fetch(`${targetUrl}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Format body phải khớp với class ChatRequest(BaseModel) bên Python
+        body: JSON.stringify({ 
+            query: queryText,
+            session_id: "user-default" 
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // --- 3. HIỂN THỊ CÂU TRẢ LỜI TỪ SERVER ---
+      // Backend Python trả về field: { "response": "..." }
+      const botResponse = { sender: 'bot', text: data.response };
       setMessages(prev => [...prev, botResponse]);
+
+    } catch (error) {
+      console.error("Lỗi gọi API:", error);
+      const errorResponse = { 
+        sender: 'bot', 
+        text: 'Xin lỗi, server đang bận hoặc gặp sự cố kết nối. Vui lòng thử lại sau.' 
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
   
   const handleKeyDown = (e) => {
