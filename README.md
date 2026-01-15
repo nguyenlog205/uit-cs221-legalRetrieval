@@ -94,7 +94,7 @@ The final stage involves the Specific Generator, which utilizes the `Qwen2.5-3B-
 }
 ```
 #### 3.2.4. User interface
-![Demo](img\demo.png)
+![Demo](img/demo.png)
 
 ## Acknowledgement
 The whole project team would like to express our sincere gratitude to our supervisor, [Mr. Nguyễn Trọng Chỉnh (MSc)](https://cs.uit.edu.vn/featured_item/ths-nguyen-trong-chinh/), from the Faculty of Computer Science at the University of Information Technology (UIT), VNU-HCM. His invaluable guidance, insightful feedback, and unwavering support were instrumental in the completion of this project.
