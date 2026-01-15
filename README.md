@@ -9,27 +9,13 @@
 ```bash
 uit-cs221-legalRetrieval/
 │
-├── app/                  # Source code for the web application
-│   ├── backend/          # Backend server (API, business logic)
-│   └── frontend/         # User interface (React)
-│
+├── app/                  # Source code for the web interface
+├── configs/              # Configuration for project settings
 ├── data/                 # All project data
-│   ├── faiss/            # Processed data for retrieval
-│   │   ├── index.faiss   # FAISS index for vector search
-│   │   └── metadata.json # Metadata for text chunks
-│   └── raw/              # Raw data collected from sources
-│
-├── development/          # Scripts and notebooks for development and ETL pipeline
-│   ├── etl-pipeline/     # Data ingestion and integration
-│   │   ├── data-ingestion/
-│   │   └── data-integration/
-│   ├── rag-pipeline/     # RAG-architecture
-│
-├── evaluation/           # Notebooks for model evaluation
+├── img/                  # Store images for repository
+├── notebook/             # Notebooks for development and ETL pipeline
+├── src/                  # Source for project
 │   └── report.ipynb      # Evaluation results and analysis
-│
-├── models/               # Trained models (if any)
-│
 ├── requirements.txt      # Necessary libraries
 ├── .gitignore            # Files and directories ignored by Git
 └── README.md             # Main project documentation
