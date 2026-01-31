@@ -34,7 +34,7 @@ agents = {}
 # --- Lifespan Manager ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("--- KHỞI ĐỘNG HỆ THỐNG RAG (CLOUD API MODE) ---")
+    logger.info("--- KHỞI ĐỘNG HỆ THỐNG RAG ---")
     
     # 1. Load Config từ biến môi trường
     groq_api_key = load_env("GROQ_API_KEY")
